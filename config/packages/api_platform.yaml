@@ -1,0 +1,14 @@
+# config/packages/api_platform.yaml
+api_platform:
+    title: 'Projet Fil Rouge'
+    description: 'A Symfony API to manage a simple blog app.'
+    version: '1.3.0'
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        json: ['application/merge-patch+json']
+    swagger:
+        versions: [3]
+    collection:
+        pagination:
+            items_per_page: 3 
