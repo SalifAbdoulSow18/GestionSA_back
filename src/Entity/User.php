@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Asset;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -23,13 +26,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * },
  *    collectionOperations={
  *        "get"={"path"="/admin/users"},
- *        "post"={"path"="/admin/users"}
+ *        "addUser":{
+ * 
+ *              "route_name"="adding",
+ *              "path":"/admin/users",
+ *               "access_control"="(is_granted('ROLE_ADMIN') )",
+ *               "deserialize" = false
+ *              }
  *},
  *    itemOperations={
  *        "get"={"path"="/admin/users/{id}"},
  *        "put"={"path"="/admin/users/{id}"}
  *}
  * )
+ * @UniqueEntity("username", message="l'adress username doit être unique")
  */
 class User implements UserInterface
 {
@@ -37,51 +47,59 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read","user:read"})
+     * @Groups({"profilusers:read","user:read"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     */
+     * @Asset\Email(message="l'adress email n'est pas valide")
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")  
+     *      * */
     private $email;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
      */
     private $username;
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"user:read"})
      */
     private $profil;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","user:read"})
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"profilusers:read","user:read"})
+     * 
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","user:read"})
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"profilusers:read","user:read"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","user:read"})
+     * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"profilusers:read","user:read"})
      */
     private $phone;
 
@@ -89,6 +107,16 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="users")
      */
     private $chats;
+
+    /**
+     * @ORM\Column(type="blob")
+     */
+    private $photo;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
 
     public function __construct()
     {
@@ -127,7 +155,7 @@ class User implements UserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
+        
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_'.$this->profil->getLibelle();
 
@@ -180,17 +208,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
 
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
-
-        return $this;
-    }
 
     public function getProfil(): ?Profil
     {
@@ -266,6 +284,30 @@ class User implements UserInterface
                 $chat->setUsers(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto($photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

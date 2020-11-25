@@ -2,13 +2,25 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\GroupeCompetenceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
+ * @ApiResource(
+ * normalizationContext={"groups"={"grpCompetence:read"}},
+ *      attributes={
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "security_message"="Vous n'avez pas access à cette Ressource"
+ *      },
+ *   routePrefix="/admin",
+ *      itemOperations={
+ *          "get","put",
+ *      }
+ * )
  */
 class GroupeCompetence
 {
@@ -20,7 +32,7 @@ class GroupeCompetence
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Competence::class, mappedBy="groupeCompetence")
+     * @ORM\ManyToMany(targetEntity=Competence::class, mappedBy="groupeCompetence", cascade={"persist"})
      */
     private $competences;
 
@@ -28,6 +40,11 @@ class GroupeCompetence
      * @ORM\Column(type="string", length=255)
      */
     private $libelle;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $description;
 
     public function __construct()
     {
@@ -74,6 +91,18 @@ class GroupeCompetence
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

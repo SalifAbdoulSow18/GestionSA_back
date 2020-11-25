@@ -2,13 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\CompetenceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompetenceRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CompetenceRepository::class)
+ * @ApiResource(
+ *      attributes={
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "security_message"="Vous n'avez pas access à cette Ressource"
+ *      },
+ *   routePrefix="/admin",
+ *      itemOperations={
+ *          "get","put",
+ *      }
+ * )
  */
 class Competence
 {

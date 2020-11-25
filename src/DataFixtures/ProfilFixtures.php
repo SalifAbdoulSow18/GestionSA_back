@@ -12,7 +12,7 @@ class ProfilFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
 
-        $profils =["ADMIN", "FORMATEUR", "APPRENANT", "CM"];
+        $profils =["ADMIN", "APPRENANT", "FORMATEUR", "CM"];
         foreach ($profils as $key => $value) {
             $profil = new profil();
             $profil->setLibelle($value)

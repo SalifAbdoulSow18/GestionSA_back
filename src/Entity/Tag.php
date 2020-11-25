@@ -2,13 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\TagRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TagRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
+ *@ApiResource(
+ *      attributes={
+ *          "security"="is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR')",
+ *          "security_message"="Vous n'avez pas access à cette Ressource"
+ *      },
+ *      routePrefix="/admin",
+ * itemOperations={
+ *          "get","put",
+ *      }
+ * )
  */
 class Tag
 {
@@ -28,6 +39,11 @@ class Tag
      * @ORM\ManyToMany(targetEntity=Brief::class, mappedBy="tag")
      */
     private $briefs;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $libelle;
 
     public function __construct()
     {
@@ -90,6 +106,18 @@ class Tag
         if ($this->briefs->removeElement($brief)) {
             $brief->removeTag($this);
         }
+
+        return $this;
+    }
+
+    public function getLibelle(): ?string
+    {
+        return $this->libelle;
+    }
+
+    public function setLibelle(string $libelle): self
+    {
+        $this->libelle = $libelle;
 
         return $this;
     }

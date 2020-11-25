@@ -30,6 +30,8 @@ class ApprenantFixtures extends Fixture implements DependentFixtureInterface
                 $user->setPrenom($faker->firstName);
                 $user->setPhone($faker->phoneNumber);
                 $user->setEmail($faker->email);
+                $user->setStatus(1);
+                $user->setPhoto($faker->image());
                 $user->setPassword($password);
                 $manager->persist($user);
                 

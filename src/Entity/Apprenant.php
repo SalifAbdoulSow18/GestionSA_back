@@ -2,25 +2,47 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ApprenantRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
+use App\Repository\ApprenantRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
- * attributes={
- *       "security"="is_granted('ROLE_ADMIN')",
- *       "security_message"="Vous n'avez pas access à cette Ressource"
- * },
  * collectionOperations={
- *     "post"={"path"="/apprenants"},
- *}, 
+ *     "get_apprenant"={
+ *              "path"="/apprenants/",
+ *              "method"="GET",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *              "security_message"="Vous n'avez pas acces a cette ressource!",
+ *              "normalization_context"={"groups"={"apprenant:read"}}
+ *          },
+ * },
  * itemOperations={
- *     "get"={"path"="/apprenants/{id}"} 
- *}
+ *     "get_one_apprenant"={
+ *              "path"="/apprenants/{id}",
+ *              "method"="GET",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *              "security_message"="Vous n'avez pas acces a cette ressource!",
+ *          },
+ *     "get_one_apprenant_by_id_apprenant"={
+ *              "path"="/apprenants/{id}",
+ *              "method"="GET",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
+ *          },
+ * 
+ *     "put_apprenant"={
+ *              "path"="/apprenants/{id}",
+ *              "method"="PUT",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or object==user)",
+ *              "security_message"="Vous n'avez pas acces a cette ressource!",
+ *          },
+ * }
  * )
  */
 class Apprenant extends User

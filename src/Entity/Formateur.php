@@ -2,15 +2,31 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\FormateurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Entity;
+use App\Repository\FormateurRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=FormateurRepository::class)
+ * @ApiResource(
+ * collectionOperations={},
+ * itemOperations={
+ *     "get_one_formateur_by_id_formateur"={
+ *              "path"="/formateurs/{id}",
+ *              "method"="GET",
+ *              "security"="(is_granted('ROLE_ADMIN')  or object==user)",
+ *          },
+ *      "put_one_formateur_by_id_formateur"={
+ *              "path"="/formateurs/{id}",
+ *              "method"="PUT",
+ *              "security"="(is_granted('ROLE_ADMIN')  or object==user)",
+ *          },
+ * }
+ * )
  */
 class Formateur extends User
 {

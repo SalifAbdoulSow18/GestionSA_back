@@ -19,7 +19,7 @@ class FormateurFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr_FR');
-        $profil = $this ->getReference('p3');
+        $profil = $this ->getReference('p2');
         if (isset($profil)) {
             for ($i=0; $i < 4; $i++) { 
                 $user = new Formateur();
@@ -30,6 +30,8 @@ class FormateurFixtures extends Fixture implements DependentFixtureInterface
                 $user->setPrenom($faker->firstName);
                 $user->setPhone($faker->phoneNumber);
                 $user->setEmail($faker->email);
+                $user->setStatus(1);
+                $user->setPhoto($faker->image());
                 $user->setPassword($password);
                 $manager->persist($user);
                 

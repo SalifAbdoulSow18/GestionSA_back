@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProfilRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
@@ -20,19 +21,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "security"="is_granted('ROLE_ADMIN')",
  *          "security_message"="Vous n'avez pas access à cette Ressource"
  *      },
- *      collectionOperations={
- *          "get"={"path"="/admin/profils"},
- *          "post"={"path"="/admin/profils"}
- *      },
- *      itemOperations={
- *          "get"={"path"="/admin/profils/{id}"},
- *          "users_of_one_profil"={
- *              "method"="GET",
- *              "path"="/admin/profils/{id}/users",
- *              "normalization_context"={"groups"={"profilusers:read"}}
- *          },
- *          "put"={"path"="/admin/profils/{id}"},
- *          "delete"={"path"="/admin/profils/{id}"}
+ *     routePrefix="/admin",
+ * itemOperations={
+ *          "get","put","delete",
  *      }
  *)
  *@ApiFilter(SearchFilter::class, properties={"status": "exact"})
@@ -62,6 +53,7 @@ class Profil
 
     /**
      * @ORM\Column(type="boolean")
+     * @ApiSubresource
      * @Groups({"profil:read","profilusers:read"})
      * @Assert\NotNull(message="Ce champs est obligatoire")
      */
@@ -69,6 +61,7 @@ class Profil
 
     public function __construct()
     {
+        $this->status=true;
         $this->users = new ArrayCollection();
     }
 
