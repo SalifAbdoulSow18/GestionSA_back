@@ -11,13 +11,15 @@ class GroupeCompetenceFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for ($i=0; $i < 4; $i++) { 
+        for ($i=0; $i < 2; $i++) { 
             $groupeCompetence = (new GroupeCompetence())
                             ->setLibelle("GroupeCompetence" .$i)
+                            ->setStatus(1)
                             ->setDescription("description" .$i);
-            for ($j=0; $j < 4; $j++) { 
+            for ($j=0; $j < 3; $j++) { 
                 $competence = new Competence();
                 $competence->setNomCompetence("competence" .$j);
+                $competence->setStatus(1);
                 $groupeCompetence->addCompetence($competence);
                 $manager->persist($competence);
             } 

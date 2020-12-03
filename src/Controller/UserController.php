@@ -66,47 +66,34 @@ class UserController extends AbstractController
 
     /**
      * @Route(
-     *     path="/api/admin/users/{id}",
+     *     "/api/admin/users/{id}",
      *     name="modification",
      *     methods={"PUT"}
      *     )
      */
     public function ModifyUser(UserService $userService, UserRepository $userRepository, Request $request,$id)
     {
-       //dd($id);
-       
         $user = $userRepository->find($id);
-      // dd($user);
         $data_user=$request->request->all();
-        
         foreach($data_user as $key => $value)
         {
             if($key!=='_method')
             {
-              //  $user->setEmail('dsqkjhq');
                $user->{"set".ucfirst($key)}($value);
             }
         }
-
-
         $uploadedFile = $request->files->get('photo');
         if($uploadedFile){
             $file = $uploadedFile->getRealPath();
             $photo = fopen($file,'r+');
             $user->setPhoto($photo);
-            
         }
-       // dd($user);
-    
         if (!empty($userService->ValidatePost($user))){
             return $this->json($userService->ValidatePost($user),400);
         }
         //dd($utilisateur);
         $this->manager->persist($user);
-         $this->manager->flush();
-        //$this->sendEmail->send($utilisateur->getEmail(),"registration",'your registration has been successfully completed');
-        
-        
+        $this->manager->flush();                
         return $this->json("success",200);
     }
 

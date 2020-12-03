@@ -36,7 +36,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *},
  *    itemOperations={
  *        "get"={"path"="/admin/users/{id}"},
- *        "put"={"path"="/admin/users/{id}"}
+ *        "put"={"path"="/admin/users/{id}"},
  *}
  * )
  * @UniqueEntity("username", message="l'adress username doit être unique")
@@ -47,7 +47,8 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"profilusers:read","user:read"})
+     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @Groups({"list_groupe:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
      */
     protected $id;
 
@@ -55,7 +56,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Asset\Email(message="l'adress email n'est pas valide")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")  
-     *      * */
+     *     
+     */
     private $email;
 
     
@@ -77,29 +79,31 @@ class User implements UserInterface
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
-     * @Groups({"user:read"})
+     * @Groups({"user:read","apprenant:read","formateur:read"})
      */
     private $profil;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
-     * @Groups({"profilusers:read","user:read"})
-     * 
+     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
-     * @Groups({"profilusers:read","user:read"})
+     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
-     * @Groups({"profilusers:read","user:read"})
+     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
      */
     private $phone;
 

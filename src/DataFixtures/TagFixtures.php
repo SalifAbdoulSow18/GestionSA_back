@@ -11,11 +11,11 @@ class TagFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for ($j=1; $j <= 4 ; $j++) { 
+        for ($j=1; $j <= 2 ; $j++) { 
             $groupeTag = new GroupeTag();
             $groupeTag->setLibelle("groupeTag" .$j);
         
-            for ($i=0; $i < 5 ; $i++) { 
+            for ($i=0; $i < 3 ; $i++) { 
                 $tag = new Tag();
                 $tag->setLibelle("tag" .$i);
                 $groupeTag->addTag($tag);

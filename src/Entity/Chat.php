@@ -2,11 +2,35 @@
 
 namespace App\Entity;
 
-use App\Repository\ChatRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ChatRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ChatRepository::class)
+ * @ApiResource(
+ * 
+ * attributes={
+ *      "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or is_granted('ROLE_APPRENANT'))",
+ *      "security_message" = "vous n'avez pas accès a cette resource"
+ * },
+ * 
+ * collectionOperations={
+ * 
+ *      "show_chat_apprenant_promo"={
+ *          "method"= "GET",
+ *          "path" = "/users/promo/{id1}/apprenant/{id2}/chats",
+ *          "route_name"="getChatOfOneApprenantOfOnePromo",
+ *      },
+ * 
+ *     "creat_chat_apprenant_promo"={
+ *          "method"= "POST",
+ *          "path" = "/users/promo/{id1}/apprenant/{id2}/chats",
+ *          "route_name"="postChatOfOneApprenantOfOnePromo",
+ *      }
+ * },
+ * itemOperations={}
+ * )
  */
 class Chat
 {

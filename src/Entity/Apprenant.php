@@ -14,27 +14,24 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
+ * normalizationContext={"groups"={"apprenant:read"}},
  * collectionOperations={
  *     "get_apprenant"={
- *              "path"="/apprenants/",
+ *              "path"="/apprenants",
  *              "method"="GET",
  *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
  *              "security_message"="Vous n'avez pas acces a cette ressource!",
- *              "normalization_context"={"groups"={"apprenant:read"}}
+ *              
  *          },
  * },
  * itemOperations={
  *     "get_one_apprenant"={
  *              "path"="/apprenants/{id}",
  *              "method"="GET",
- *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
  *              "security_message"="Vous n'avez pas acces a cette ressource!",
  *          },
- *     "get_one_apprenant_by_id_apprenant"={
- *              "path"="/apprenants/{id}",
- *              "method"="GET",
- *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM') or object==user)",
- *          },
+ *     
  * 
  *     "put_apprenant"={
  *              "path"="/apprenants/{id}",
@@ -72,6 +69,11 @@ class Apprenant extends User
      */
     private $groupes;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=ProfilDeSortie::class, mappedBy="apprenants")
+     */
+    private $profilDeSorties;
+
     public function __construct()
     {
         $this->livrableAttenduApprenants = new ArrayCollection();
@@ -79,6 +81,7 @@ class Apprenant extends User
         $this->competencesValides = new ArrayCollection();
         $this->briefApprenants = new ArrayCollection();
         $this->groupes = new ArrayCollection();
+        $this->profilDeSorties = new ArrayCollection();
     }
 
     /**
@@ -223,6 +226,33 @@ class Apprenant extends User
     {
         if ($this->groupes->removeElement($groupe)) {
             $groupe->removeApprenant($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProfilDeSortie[]
+     */
+    public function getProfilDeSorties(): Collection
+    {
+        return $this->profilDeSorties;
+    }
+
+    public function addProfilDeSorty(ProfilDeSortie $profilDeSorty): self
+    {
+        if (!$this->profilDeSorties->contains($profilDeSorty)) {
+            $this->profilDeSorties[] = $profilDeSorty;
+            $profilDeSorty->addApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProfilDeSorty(ProfilDeSortie $profilDeSorty): self
+    {
+        if ($this->profilDeSorties->removeElement($profilDeSorty)) {
+            $profilDeSorty->removeApprenant($this);
         }
 
         return $this;

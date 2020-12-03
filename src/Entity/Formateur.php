@@ -13,12 +13,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass=FormateurRepository::class)
  * @ApiResource(
- * collectionOperations={},
+ * normalizationContext={"groups"={"formateur:read"}},
+ * collectionOperations={
+ * "get_formateur_by_admin_and_cm"={
+ *              "path"="/formateurs",
+ *              "method"="GET",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_CM'))",
+ *              "security_message"="Vous n'avez pas acces a cette ressource!"
+ *          },
+ * },
  * itemOperations={
  *     "get_one_formateur_by_id_formateur"={
  *              "path"="/formateurs/{id}",
  *              "method"="GET",
- *              "security"="(is_granted('ROLE_ADMIN')  or object==user)",
+ *              "security"="(is_granted('ROLE_ADMIN') or is_granted('ROLE_CM') or object==user)",
+ *              "security_message"="Vous n'avez pas acces a cette ressource!"
  *          },
  *      "put_one_formateur_by_id_formateur"={
  *              "path"="/formateurs/{id}",

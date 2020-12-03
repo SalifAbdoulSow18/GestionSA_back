@@ -16,7 +16,7 @@ class ProfilFixtures extends Fixture
         foreach ($profils as $key => $value) {
             $profil = new profil();
             $profil->setLibelle($value)
-                ->setStatus(1);         
+                 ->setStatus(1);        
             $manager ->persist($profil);
             $this->addReference("p$key", $profil);
             $manager->flush();

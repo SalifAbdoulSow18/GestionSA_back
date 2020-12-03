@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\PromoRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PromoRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PromoRepository::class)
@@ -16,6 +17,7 @@ class Promo
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"list_groupe:read"})
      */
     private $id;
 
@@ -26,6 +28,7 @@ class Promo
 
     /**
      * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="promos")
+     * @Groups({"list_groupe:read"})
      */
     private $referentiel;
 
@@ -41,24 +44,39 @@ class Promo
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"list_groupe:read"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"list_groupe:read"})
      */
     private $dateFin;
+
+    /**
+     * @ORM\Column(type="date")
+     * @Groups({"list_groupe:read"})
+     */
+    private $annee;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promos")
+     */
+    private $groupes;
 
     public function __construct()
     {
         $this->chats = new ArrayCollection();
         $this->competencesValides = new ArrayCollection();
         $this->briefMaPromo = new ArrayCollection();
+        $this->groupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -200,6 +218,48 @@ class Promo
     public function setDateFin(\DateTimeInterface $dateFin): self
     {
         $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getAnnee(): ?\DateTimeInterface
+    {
+        return $this->annee;
+    }
+
+    public function setAnnee(\DateTimeInterface $annee): self
+    {
+        $this->annee = $annee;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): self
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes[] = $groupe;
+            $groupe->setPromos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): self
+    {
+        if ($this->groupes->removeElement($groupe)) {
+            // set the owning side to null (unless already changed)
+            if ($groupe->getPromos() === $this) {
+                $groupe->setPromos(null);
+            }
+        }
 
         return $this;
     }

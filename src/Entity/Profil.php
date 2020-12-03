@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilRepository::class)
@@ -26,6 +27,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "get","put","delete",
  *      }
  *)
+ *@UniqueEntity("libelle", message="l'adress libelle doit être unique")
  *@ApiFilter(SearchFilter::class, properties={"status": "exact"})
  */
 class Profil
@@ -34,30 +36,30 @@ class Profil
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read","profilusers:read"})
+     * @Groups({"profil:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","profilusers:read"})
+     * @Groups({"profil:read"})
      * @Assert\NotBlank(message="Ce champs est obligatoire")
      */
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil")
-     * @Groups({"profilusers:read"})
-     */
-    private $users;
-
-    /**
      * @ORM\Column(type="boolean")
-     * @ApiSubresource
-     * @Groups({"profil:read","profilusers:read"})
+     * @Groups({"profil:read"})
      * @Assert\NotNull(message="Ce champs est obligatoire")
      */
     private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil")
+     * @ApiSubresource
+     * @Groups({"profil:read"})
+     */
+    private $users;
 
     public function __construct()
     {

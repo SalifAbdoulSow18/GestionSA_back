@@ -7,6 +7,9 @@ use App\Repository\TagRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
@@ -20,6 +23,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *          "get","put",
  *      }
  * )
+ * @UniqueEntity("libelle", message="l'adress libelle doit être unique")
  */
 class Tag
 {
@@ -27,6 +31,7 @@ class Tag
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"grptag:write"})
      */
     private $id;
 
@@ -41,7 +46,9 @@ class Tag
     private $briefs;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Assert\NotBlank(message="Ce champs est obligatoire")
+     * @Groups({"grptag:write"})
      */
     private $libelle;
 
