@@ -36,13 +36,13 @@ class Profil
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read"})
+     * @Groups({"apprenant:read","formateur:read","profil:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read"})
+     * @Groups({"user:read","profil:read"})
      * @Assert\NotBlank(message="Ce champs est obligatoire")
      */
     private $libelle;

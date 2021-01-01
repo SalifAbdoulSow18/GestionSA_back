@@ -74,6 +74,11 @@ class Apprenant extends User
      */
     private $profilDeSorties;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="apprenants")
+     */
+    private $promo;
+
     public function __construct()
     {
         $this->livrableAttenduApprenants = new ArrayCollection();
@@ -254,6 +259,18 @@ class Apprenant extends User
         if ($this->profilDeSorties->removeElement($profilDeSorty)) {
             $profilDeSorty->removeApprenant($this);
         }
+
+        return $this;
+    }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
 
         return $this;
     }

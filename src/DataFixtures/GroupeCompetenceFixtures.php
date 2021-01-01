@@ -18,7 +18,7 @@ class GroupeCompetenceFixtures extends Fixture
                             ->setDescription("description" .$i);
             for ($j=0; $j < 3; $j++) { 
                 $competence = new Competence();
-                $competence->setNomCompetence("competence" .$j);
+                $competence->setNomCompetence("competence$i" .$j);
                 $competence->setStatus(1);
                 $groupeCompetence->addCompetence($competence);
                 $manager->persist($competence);

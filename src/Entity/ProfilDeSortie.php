@@ -3,12 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProfilDeSortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilDeSortieRepository::class)
@@ -36,6 +39,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * },
  * 
  * itemOperations={
+ *       "delete_profils_sortie"={
+ *          "method"= "DELETE",
+ *          "path" = "/admin/profilsorties/{id}",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR') or is_granted('ROLE_CM'))"
+ *      },
  *  
  *      "get_one_profils_sortie"={
  *          "method"= "GET",
@@ -48,7 +56,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "path" = "/admin/profilsorties/{id}",
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
  *      },
- * 
+ *      "delete",
  *     "show_profilsortie_promo"={
  *          "method"= "GET",
  *          "path" = "/admin/promo/{id1}/profilsorties/{id2}",
@@ -57,7 +65,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      }
  * }
  * )
- * 
+ * @UniqueEntity("libelle", message="l'adress libelle doit être unique"),
+ * @ApiFilter(SearchFilter::class, properties={"status": "exact"})
  */
 class ProfilDeSortie
 {

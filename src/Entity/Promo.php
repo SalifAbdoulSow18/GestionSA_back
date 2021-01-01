@@ -2,14 +2,64 @@
 
 namespace App\Entity;
 
+use App\Entity\Chat;
+use App\Entity\Groupe;
+use App\Entity\Referentiel;
+use App\Entity\BriefMaPromo;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\CompetencesValides;
 use App\Repository\PromoRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PromoRepository::class)
+ * @ApiResource(
+ * collectionOperations={
+ * "list_promo"={
+ *          "method"= "GET",
+ *          "path" = "/admin/promos",
+ *          "normalization_context"={"groups"={"list_promo:read"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * "list_promo_principal"={
+ *          "method"= "GET",
+ *          "path" = "/admin/promos/principal",
+ *          "normalization_context"={"groups"={"list_promo_principal:read"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * "list_promo_attente"={
+ *          "method"= "GET",
+ *          "path" = "/admin/promos/apprenants/attente",
+ *          "normalization_context"={"groups"={"list_promo_attente:read"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * 
+ * "add_promo"={
+ *          "method"= "POST",
+ *          "path" = "/admin/promos",
+ *          "denormalization_context"={"groups"={"add_promo:write"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * },
+ * itemOperations={
+ * "list_one_promo_apprenant"={
+ *          "method"= "GET",
+ *          "path" = "/admin/promos/{id}",
+ *          "normalization_context"={"groups"={"list_one_promo_apprenant:read"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * "modify_promo"={
+ *          "method"= "PUT",
+ *          "path" = "/admin/promos/{id}",
+ *          "denormalization_context"={"groups"={"modify_promo:write"}},
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
+ *      },
+ * }
+ * )
  */
 class Promo
 {
@@ -17,7 +67,7 @@ class Promo
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read","ref:write"})
      */
     private $id;
 
@@ -28,7 +78,8 @@ class Promo
 
     /**
      * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read"})
+     * @ApiSubresource
      */
     private $referentiel;
 
@@ -44,32 +95,39 @@ class Promo
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
      */
     private $dateFin;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
      */
     private $annee;
 
     /**
      * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promos")
+     * @Groups({"list_promo:read","add_promo:write"})
      */
     private $groupes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Apprenant::class, mappedBy="promo")
+     * @Groups({"list_promo:read","add_promo:write"})
+     */
+    private $apprenants;
 
     public function __construct()
     {
@@ -77,6 +135,7 @@ class Promo
         $this->competencesValides = new ArrayCollection();
         $this->briefMaPromo = new ArrayCollection();
         $this->groupes = new ArrayCollection();
+        $this->apprenants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -258,6 +317,36 @@ class Promo
             // set the owning side to null (unless already changed)
             if ($groupe->getPromos() === $this) {
                 $groupe->setPromos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Apprenant[]
+     */
+    public function getApprenants(): Collection
+    {
+        return $this->apprenants;
+    }
+
+    public function addApprenant(Apprenant $apprenant): self
+    {
+        if (!$this->apprenants->contains($apprenant)) {
+            $this->apprenants[] = $apprenant;
+            $apprenant->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprenant(Apprenant $apprenant): self
+    {
+        if ($this->apprenants->removeElement($apprenant)) {
+            // set the owning side to null (unless already changed)
+            if ($apprenant->getPromo() === $this) {
+                $apprenant->setPromo(null);
             }
         }
 

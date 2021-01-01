@@ -54,7 +54,7 @@ class Groupe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_groupe:read","list_groupe_apprenant:read","list_one_groupe_apprenant:read"})
+     * @Groups({"list_promo:read","add_promo:write","list_groupe:read","list_groupe_apprenant:read","list_one_groupe_apprenant:read"})
      */
     private $id;
 
@@ -65,13 +65,13 @@ class Groupe
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="groupes")
-     * @Groups({"list_groupe:read","add_groupe:write"})
+     * @Groups({"list_groupe:read","add_promo:write","list_promo:read","add_groupe:write"})
      */
     private $formateur;
 
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
-     * @Groups({"list_groupe:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
+     * @Groups({"list_groupe:read","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
      */
     private $apprenant;
 

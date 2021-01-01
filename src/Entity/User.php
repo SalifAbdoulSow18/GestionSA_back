@@ -25,7 +25,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *        "security_message"="Vous n'avez pas access à cette Ressource"
  * },
  *    collectionOperations={
- *        "get"={"path"="/admin/users"},
+ *        "get"={"path"="/admin/users"
+ * },
  *        "addUser":{
  * 
  *              "route_name"="adding",
@@ -48,7 +49,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
+     * @Groups({"list_groupe:read","add_promo:write","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
      */
     protected $id;
 
@@ -56,6 +57,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Asset\Email(message="l'adress email n'est pas valide")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")  
+     * @Groups({"user:read","apprenant:read","formateur:read"})
      *     
      */
     private $email;
@@ -87,7 +89,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $nom;
 
@@ -95,7 +97,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $prenom;
 
@@ -103,7 +105,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $phone;
 
@@ -114,6 +116,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="blob")
+     * @Groups({"user:read","apprenant:read","formateur:read"})
      */
     private $photo;
 
@@ -294,7 +297,12 @@ class User implements UserInterface
 
     public function getPhoto()
     {
-        return $this->photo;
+        if ($this->photo !== null) {
+            return base64_encode(stream_get_contents($this->photo));
+        }else{
+            return $this->photo;
+        }
+        
     }
 
     public function setPhoto($photo): self

@@ -17,7 +17,7 @@ class TagFixtures extends Fixture
         
             for ($i=0; $i < 3 ; $i++) { 
                 $tag = new Tag();
-                $tag->setLibelle("tag" .$i);
+                $tag->setLibelle("tag$j" .$i);
                 $groupeTag->addTag($tag);
                 
     

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ReferentielRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -41,11 +42,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "method"="GET"
  *          },
  *         
- *          "gpecomp_comp_id"={
- *              "path"="/admin/referentiels/grpecompetences/{id}",
- *              "normalization_context"={"groups"={"gpecompcomp:read"}},
- *              "method"="GET"
- *          },
  * 
  *          "modifierReferentiel"={
  *               "path"="/admin/referentiels/{id}",
@@ -63,7 +59,7 @@ class Referentiel
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read"})
      */
     private $id;
 
@@ -74,39 +70,41 @@ class Referentiel
 
     /**
      * @ORM\OneToMany(targetEntity=Promo::class, mappedBy="referentiel")
+     * @Groups({"ref:write"})
      */
     private $promos;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read"})
      */
     private $presentation;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read"})
+     * @Groups({"list_groupe:read","list_promo:read"})
      */
     private $critereAdmission;
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, mappedBy="referentiels")
+     * @ApiSubresource
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
      */
     private $groupeCompetences;
