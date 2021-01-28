@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CompetenceRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,18 +23,25 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      },
  *   routePrefix="/admin",
  *          collectionOperations={
+ *          "get",
  *          "ajoutCompetence"={
  *              "normalization_context"={"groups"={"compcomp:read"}},
- *              "denormalizationContext"={"groups"={"compcomp:write"}},
- *              "method"="POST"
- *          },
- *              "get"
+ *              "denormalization_context"={"groups"={"compcomp:write"}},
+ *              "method"="POST",
+ *          }
+ *              
  * },
  *      itemOperations={
- *          "get","put",
+ *          "modifierCompetence"={
+ *              "normalization_context"={"groups"={"compmodif:read"}},
+ *              "denormalization_context"={"groups"={"compmodif:write"}},
+ *              "method"="PUT"
+ *          },
+ *          "get","delete"
  *      }
  * )
  * @UniqueEntity("nomCompetence", message="l'adress nomCompetence doit être unique")
+ * @ApiFilter(SearchFilter::class, properties={"status": "exact"})
  */
 class Competence
 {
@@ -40,20 +49,20 @@ class Competence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read","grpcomp:write"})
+     * @Groups({"competence:read","listOnegrpcomp:read","listgrpcomp:read","gpecompcomp:read","grpcomp:write","compmodif:write","compcomp:write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Ce champs est obligatoire")
-     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","grpcomp:write"})
+     * @Groups({"competence:read","listOnegrpcomp:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","grpcomp:write","compmodif:write"})
      */
     private $nomCompetence;
 
     /**
-     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="competences")
-     * @Groups({"competence:read"})
+     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="competences", cascade={"persist"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $groupeCompetence;
 
@@ -65,7 +74,7 @@ class Competence
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read"})
+     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","compmodif:write"})
      */
     private $status;
 
@@ -77,7 +86,7 @@ class Competence
      *      minMessage = "You must specify at three levels",
      *      maxMessage = "You must specify at three levels"
      * )
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $niveaux;
 

@@ -17,13 +17,13 @@ class Niveau
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $level;
 
@@ -45,19 +45,19 @@ class Niveau
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"competence:read"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write"})
      */
     private $groupeAction;
 
@@ -68,7 +68,7 @@ class Niveau
 
     public function __construct()
     {
-        $this->status=false;
+        $this->status=true;
         $this->competence = new ArrayCollection();
         $this->briefs = new ArrayCollection();
         $this->livrablePartiels = new ArrayCollection();

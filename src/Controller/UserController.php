@@ -45,7 +45,8 @@ class UserController extends AbstractController
      */
     public function AddUser(UserService $userService, Request $request)
     {
-       
+       $image = $request->files->get('photo');
+       $image = fopen($image->getRealPath(), 'rb');
        $type = $request->get("type");
        $utilisateur = $userService->NewUser($type,$request);
        // dd($utilisateur);
@@ -54,11 +55,10 @@ class UserController extends AbstractController
             return $this->json($userService->ValidatePost($utilisateur),400);
         }
         //dd($utilisateur);
+        $utilisateur->setPhoto($image);
         $this->manager->persist($utilisateur);
          $this->manager->flush();
         //$this->sendEmail->send($utilisateur->getEmail(),"registration",'your registration has been successfully completed');
-        $utilisateur->setPhoto($utilisateur->getPhoto());
-        
         return $utilisateur;
     }
 

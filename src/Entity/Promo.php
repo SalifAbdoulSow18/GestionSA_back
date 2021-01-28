@@ -129,8 +129,14 @@ class Promo
      */
     private $apprenants;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $status;
+
     public function __construct()
     {
+        $this->status=true;
         $this->chats = new ArrayCollection();
         $this->competencesValides = new ArrayCollection();
         $this->briefMaPromo = new ArrayCollection();
@@ -349,6 +355,18 @@ class Promo
                 $apprenant->setPromo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }

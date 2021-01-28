@@ -1,30 +1,24 @@
 <?php
 namespace App\DataPersister;
 
-use App\Entity\User;
-use App\Entity\Competence;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
+use App\Entity\User;
 
-final class CompetenceDataPersister implements ContextAwareDataPersisterInterface
+final class UserDataPersister implements ContextAwareDataPersisterInterface
 {
-    
     private $manager;
-
     public function __construct(EntityManagerInterface $manager)
     {
       $this->manager=$manager;
     }
-
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Competence;
+        return $data instanceof User;
     }
 
     public function persist($data, array $context = [])
     {
-      //dd('rrrr');
       // call your persistence layer to save $data
       $this->manager->persist($data);
       $this->manager->flush();
@@ -34,13 +28,9 @@ final class CompetenceDataPersister implements ContextAwareDataPersisterInterfac
     public function remove($data, array $context = [])
     {
       $data->setStatus(false); 
-      foreach ($data->getNiveaux() as $niveau) {
-        $niveau->setStatus(false);
-        $this->manager->persist($niveau);
-      }
       $this->manager->persist($data);
       $this->manager->flush();
+      // call your persistence layer to delete $data
     }
-
-    
 }
+?>

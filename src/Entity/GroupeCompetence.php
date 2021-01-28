@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\GroupeCompetenceRepository;
@@ -33,12 +35,18 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * "listGrpComp":{
  * 
  *               "method"="GET",
- *              "path":"/admin/groupe_competences/competences",
+ *              "path":"/groupe_competences/competences",
  *              "normalization_context"={"groups"={"listgrpcomp:read"}},
  *              }
  * },
  *      itemOperations={
- *          "get",
+ *          "listOneGrpComp":{
+ *                "method"="GET",
+ *              "path":"/groupe_competences/{id}",
+ *              "normalization_context"={"groups"={"listOnegrpcomp:read"}},
+ *              }, 
+ * 
+ *          "delete",
  *          "modifierGrpeCompetence"={
  *              "normalization_context"={"groups"={"grpcomp:read"}},
  *              "denormalization_context"={"groups"={"grpcomp:write"}},
@@ -47,6 +55,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *      }
  * )
  * @UniqueEntity("libelle", message="l'adress libelle doit être unique")
+ * @ApiFilter(SearchFilter::class, properties={"status": "exact"})
  */
 class GroupeCompetence
 {
@@ -54,7 +63,7 @@ class GroupeCompetence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"competence:read","ref:write","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read"})
+     * @Groups({"addref:write","competence:read","compmodif:write","listOnegrpcomp:read","ref:write","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","grpcomp:write","compcomp:write"})
      */
     private $id;
 
@@ -62,32 +71,32 @@ class GroupeCompetence
      * @ORM\ManyToMany(targetEntity=Competence::class, mappedBy="groupeCompetence", cascade={"persist"})
      * @Assert\NotBlank(message="Ce champs est obligatoire")
      * @ApiSubresource
-     * @Groups({"gpecompcomp:read","listgrpcomp:read","grpcomp:write"})
+     * @Groups({"gpecompcomp:read","listOnegrpcomp:read","listgrpcomp:read","grpcomp:write"})
      */
     private $competences;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Ce champs est obligatoire")
-     * @Groups({"competence:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read","grpcomp:write"})
+     * @Groups({"addref:write","competence:read","compmodif:write","listOnegrpcomp:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read","grpcomp:write"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Ce champs est obligatoire")
-     * @Groups({"competence:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read","grpcomp:write"})
+     * @Groups({"addref:write","competence:read","listOnegrpcomp:read","compmodif:write","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read","grpcomp:write"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"competence:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
+     * @Groups({"addref:write","competence:read","listOnegrpcomp:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
      */
     private $status;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="groupeCompetences")
+     * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="groupeCompetences", cascade={"persist"})
      */
     private $referentiels;
 

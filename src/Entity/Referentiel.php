@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ReferentielRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
@@ -29,9 +31,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "method"="GET"
  *          },
  *          "addReferent":{
- * 
- *              "route_name"="referentiel_gpecompetence",
- *               "method"="POST",
+ *              "method"="POST",
+ *              "denormalization_context"={"groups"={"addref:write"}},
  *              "path":"/admin/referentiels",
  *              }
  *      },
@@ -49,8 +50,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "denormalization_context"={"groups"={"ref:write"}},
  *              "method"="PUT"
  *          },
+ * 
+ *         "supprimerReferentiel"={
+ *          "path"="/admin/referentiels/{id}",
+ *          "method"="DELETE"
+ *          }
  *      }
  * )
+ * @ApiFilter(SearchFilter::class, properties={"status": "exact"})
  */
 class Referentiel
 {
@@ -77,40 +84,54 @@ class Referentiel
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
      */
     private $presentation;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
      */
     private $critereEvaluation;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
      */
     private $critereAdmission;
 
     /**
-     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, mappedBy="referentiels")
+     * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, mappedBy="referentiels", cascade={"persist"})
      * @ApiSubresource
-     * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
+     * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read","addref:write"})
      */
     private $groupeCompetences;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"addref:write"})
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
+     */
+    private $programme;
+
     public function __construct()
     {
+        $this->status=true;
         $this->competencesValides = new ArrayCollection();
         $this->promos = new ArrayCollection();
         $this->groupeCompetences = new ArrayCollection();
@@ -252,6 +273,30 @@ class Referentiel
         if ($this->groupeCompetences->removeElement($groupeCompetence)) {
             $groupeCompetence->removeReferentiel($this);
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?bool
+    {
+        return $this->status;
+    }
+
+    public function setStatus(bool $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getProgramme(): ?string
+    {
+        return $this->programme;
+    }
+
+    public function setProgramme(string $programme): self
+    {
+        $this->programme = $programme;
 
         return $this;
     }

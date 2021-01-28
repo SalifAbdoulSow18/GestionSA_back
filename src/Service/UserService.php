@@ -48,12 +48,12 @@ class UserService
     public function NewUser($profil, Request $request){
         $userReq = $request->request->all();
         //dd($userReq);
-        $uploadedFile = $request->files->get('photo');
-        if($uploadedFile){
-            $file = $uploadedFile->getRealPath();
-            $photo = fopen($file,'r+');
-            $userReq['photo']=$photo;
-        }
+        // $uploadedFile = $request->files->get('photo');
+        // if($uploadedFile){
+        //     $file = $uploadedFile->getRealPath();
+        //     $photo = fopen($file,'r+');
+        //     $userReq['photo']=$photo;
+        // }
 
         if($profil == "Admin"){
             $user = Admin::class;

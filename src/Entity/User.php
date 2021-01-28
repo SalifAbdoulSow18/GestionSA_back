@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Asset;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -28,7 +30,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *        "get"={"path"="/admin/users"
  * },
  *        "addUser":{
- * 
  *              "route_name"="adding",
  *              "path":"/admin/users",
  *               "access_control"="(is_granted('ROLE_ADMIN') )",
@@ -38,8 +39,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *    itemOperations={
  *        "get"={"path"="/admin/users/{id}"},
  *        "put"={"path"="/admin/users/{id}"},
+ *         "delete"={"path"="/admin/users/{id}"}
  *}
  * )
+ * @ApiFilter(SearchFilter::class, properties={"status": "exact"})
  * @UniqueEntity("username", message="l'adress username doit être unique")
  */
 class User implements UserInterface
@@ -49,7 +52,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","add_promo:write","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
+     * @Groups({"list_groupe:read","profil:read","add_promo:write","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
      */
     protected $id;
 
@@ -57,7 +60,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Asset\Email(message="l'adress email n'est pas valide")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")  
-     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @Groups({"user:read","profil:read","apprenant:read","formateur:read"})
      *     
      */
     private $email;
@@ -89,7 +92,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $nom;
 
@@ -97,7 +100,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $prenom;
 
@@ -105,7 +108,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $phone;
 
@@ -115,18 +118,20 @@ class User implements UserInterface
     private $chats;
 
     /**
-     * @ORM\Column(type="blob")
-     * @Groups({"user:read","apprenant:read","formateur:read"})
+     * @ORM\Column(type="blob", nullable=true)
+     * @Groups({"user:read","profil:read","apprenant:read","formateur:read"})
      */
     private $photo;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"user:read"})
      */
     private $status;
 
     public function __construct()
     {
+        $this->status=true;
         $this->chats = new ArrayCollection();
     }
 
