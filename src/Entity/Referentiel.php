@@ -30,7 +30,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "normalization_context"={"groups"={"gpecompcomp:read"}},
  *              "method"="GET"
  *          },
- *          "addReferent":{
+ *          "addReferentiel":{
+ *              "route_name"="addReferentiel",
  *              "method"="POST",
  *              "denormalization_context"={"groups"={"addref:write"}},
  *              "path":"/admin/referentiels",
@@ -66,7 +67,7 @@ class Referentiel
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read"})
+     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read","add_promo:write"})
      */
     private $id;
 
@@ -84,7 +85,7 @@ class Referentiel
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read","addref:write"})
+     * @Groups({"list_groupe:read","list_promo:read","addref:write","add_promo:write"})
      */
     private $libelle;
 
@@ -123,7 +124,7 @@ class Referentiel
     private $status;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="blob")
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
      * @Groups({"list_groupe:read","list_promo:read","addref:write"})
      */
@@ -291,10 +292,14 @@ class Referentiel
 
     public function getProgramme(): ?string
     {
-        return $this->programme;
+        if ($this->programme) {
+            $programme_str = stream_get_contents($this->programme);
+            return base64_encode($programme_str);
+        }
+        return null;
     }
 
-    public function setProgramme(string $programme): self
+    public function setProgramme($programme): self
     {
         $this->programme = $programme;
 

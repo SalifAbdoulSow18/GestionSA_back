@@ -78,7 +78,7 @@ class Promo
 
     /**
      * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read"})
+     * @Groups({"list_groupe:read","modify_promo:write","add_promo:write","list_promo:read"})
      * @ApiSubresource
      */
     private $referentiel;
@@ -131,8 +131,39 @@ class Promo
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
      */
     private $status;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     */
+    private $lieu;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     */
+    private $langue;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     */
+    private $fabrique;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     */
+    private $referenceAgate;
 
     public function __construct()
     {
@@ -367,6 +398,66 @@ class Promo
     public function setStatus(bool $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(string $lieu): self
+    {
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getLangue(): ?string
+    {
+        return $this->langue;
+    }
+
+    public function setLangue(string $langue): self
+    {
+        $this->langue = $langue;
+
+        return $this;
+    }
+
+    public function getFabrique(): ?string
+    {
+        return $this->fabrique;
+    }
+
+    public function setFabrique(string $fabrique): self
+    {
+        $this->fabrique = $fabrique;
+
+        return $this;
+    }
+
+    public function getReferenceAgate(): ?string
+    {
+        return $this->referenceAgate;
+    }
+
+    public function setReferenceAgate(string $referenceAgate): self
+    {
+        $this->referenceAgate = $referenceAgate;
 
         return $this;
     }

@@ -72,12 +72,14 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"user:read","apprenant:read","formateur:read"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
+     * @Groups({"user:read","apprenant:read","formateur:read"})
      */
     private $username;
 
