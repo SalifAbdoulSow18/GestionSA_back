@@ -27,7 +27,7 @@ final class UserDataPersister implements ContextAwareDataPersisterInterface
 
     public function remove($data, array $context = [])
     {
-      $data->setStatus(false); 
+      $data->setStatus(!$data->getStatus()); 
       $this->manager->persist($data);
       $this->manager->flush();
       // call your persistence layer to delete $data

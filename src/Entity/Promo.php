@@ -49,7 +49,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * "list_one_promo_apprenant"={
  *          "method"= "GET",
  *          "path" = "/admin/promos/{id}",
- *          "normalization_context"={"groups"={"list_one_promo_apprenant:read"}},
+ *          "normalization_context"={"groups"={"list_one_promo:read"}},
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))"
  *      },
  * "modify_promo"={
@@ -67,7 +67,7 @@ class Promo
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"list_groupe:read","list_promo:read","ref:write"})
+     * @Groups({"list_groupe:read","list_promo:read","ref:write","list_one_promo:read","modify_promo:write"})
      */
     private $id;
 
@@ -78,7 +78,7 @@ class Promo
 
     /**
      * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"list_groupe:read","modify_promo:write","add_promo:write","list_promo:read"})
+     * @Groups({"list_groupe:read","modify_promo:write","add_promo:write","list_promo:read","list_one_promo:read"})
      * @ApiSubresource
      */
     private $referentiel;
@@ -95,25 +95,25 @@ class Promo
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $dateFin;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $annee;
 
@@ -125,43 +125,43 @@ class Promo
 
     /**
      * @ORM\OneToMany(targetEntity=Apprenant::class, mappedBy="promo")
-     * @Groups({"list_promo:read","add_promo:write"})
+     * @Groups({"list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $apprenants;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $lieu;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $fabrique;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"list_groupe:read","list_promo:read","add_promo:write"})
+     * @Groups({"list_groupe:read","list_promo:read","add_promo:write","list_one_promo:read","modify_promo:write"})
      */
     private $referenceAgate;
 

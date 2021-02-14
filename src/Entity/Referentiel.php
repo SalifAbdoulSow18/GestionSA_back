@@ -45,8 +45,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          },
  *         
  * 
- *          "modifierReferentiel"={
- *               "path"="/admin/referentiels/{id}",
+ *          "editReferentiel"={
+ *              "route_name"="editReferentiel",
+ *              "path"="/admin/referentiels/{id}",
  *              "normalization_context"={"groups"={"reff:read"}},
  *              "denormalization_context"={"groups"={"ref:write"}},
  *              "method"="PUT"
@@ -67,7 +68,7 @@ class Referentiel
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","modify_promo:write","list_promo:read","add_promo:write"})
+     * @Groups({"list_one_promo:read","list_groupe:read","modify_promo:write","list_promo:read","add_promo:write"})
      */
     private $id;
 
@@ -85,7 +86,7 @@ class Referentiel
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Groups({"refgpecomp:read","ref:write","referentiel_gpecompetence:read","gpecompcomp:read"})
-     * @Groups({"list_groupe:read","list_promo:read","addref:write","add_promo:write"})
+     * @Groups({"list_one_promo:read","list_groupe:read","list_promo:read","modify_promo:write","addref:write","add_promo:write"})
      */
     private $libelle;
 

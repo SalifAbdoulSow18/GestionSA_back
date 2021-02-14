@@ -74,7 +74,9 @@ class UserController extends AbstractController
     public function ModifyUser(UserService $userService, UserRepository $userRepository, Request $request,$id)
     {
         $user = $userRepository->find($id);
+        
         $data_user=$request->request->all();
+         dd($data_user);
         foreach($data_user as $key => $value)
         {
             if($key!=='_method')
@@ -92,7 +94,6 @@ class UserController extends AbstractController
             return $this->json($userService->ValidatePost($user),400);
         }
         //dd($utilisateur);
-        $this->manager->persist($user);
         $this->manager->flush();                
         return $this->json("success",200);
     }

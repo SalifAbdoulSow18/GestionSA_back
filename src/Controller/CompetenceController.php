@@ -8,13 +8,5 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CompetenceController extends AbstractController
 {
-    /**
-     * @Route("/competence", name="competence")
-     */
-    public function index(): Response
-    {
-        return $this->render('competence/index.html.twig', [
-            'controller_name' => 'CompetenceController',
-        ]);
-    }
+    
 }

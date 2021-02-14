@@ -52,7 +52,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","profil:read","add_promo:write","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
+     * @Groups({"modify_promo:write","list_one_promo:read","list_groupe:read","profil:read","add_promo:write","list_promo:read","modify_groupe:write","list_groupe_apprenant:read","add_groupe:write"})
      */
     protected $id;
 
@@ -60,7 +60,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Asset\Email(message="l'adress email n'est pas valide")
      * @Asset\NotBlank(message="Veuillez remplir ce champs")  
-     * @Groups({"user:read","profil:read","apprenant:read","formateur:read"})
+     * @Groups({"modify_promo:write","list_one_promo:read","user:read","profil:read","apprenant:read","formateur:read"})
      *     
      */
     private $email;
@@ -94,7 +94,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_one_promo:read","list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $nom;
 
@@ -102,7 +102,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_one_promo:read","list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $prenom;
 
@@ -110,7 +110,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      * @Asset\NotBlank(message="Veuillez remplir ce champs")
      * @Groups({"user:read","apprenant:read","formateur:read"})
-     * @Groups({"list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
+     * @Groups({"list_one_promo:read","list_groupe:read","profil:read","list_promo:read","list_groupe_apprenant:read"})
      */
     private $phone;
 

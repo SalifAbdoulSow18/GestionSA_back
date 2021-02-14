@@ -56,7 +56,7 @@ class Competence
     /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank(message="Ce champs est obligatoire")
-     * @Groups({"competence:read","listOnegrpcomp:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","grpcomp:write","compmodif:write"})
+     * @Groups({"competence:read","listOnegrpcomp:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","compmodif:write","grpcomp:write"})
      */
     private $nomCompetence;
 
@@ -74,7 +74,7 @@ class Competence
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","compmodif:write"})
+     * @Groups({"competence:read","listgrpcomp:read","gpecompcomp:read","compcomp:write","compmodif:write","grpcomp:write"})
      */
     private $status;
 
@@ -86,7 +86,7 @@ class Competence
      *      minMessage = "You must specify at three levels",
      *      maxMessage = "You must specify at three levels"
      * )
-     * @Groups({"competence:read","compcomp:write","compmodif:write"})
+     * @Groups({"competence:read","compcomp:write","compmodif:write","grpcomp:write"})
      */
     private $niveaux;
 

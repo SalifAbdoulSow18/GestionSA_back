@@ -91,7 +91,7 @@ class GroupeCompetence
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"addref:write","competence:read","listOnegrpcomp:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
+     * @Groups({"addref:write","competence:read","grpcomp:write","listOnegrpcomp:read","listgrpcomp:read","refgpecomp:read","referentiel_gpecompetence:read","gpecompcomp:read"})
      */
     private $status;
 
