@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  * normalizationContext={"groups"={"user:read"}},
  *    attributes={
- *        "security"="is_granted('ROLE_ADMIN')",
+ *        "security"="is_granted('ROLE_ADMIN') or is_granted('ROLE_CM')",
  *        "security_message"="Vous n'avez pas access à cette Ressource"
  * },
  *    collectionOperations={
@@ -38,7 +38,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *},
  *    itemOperations={
  *        "get"={"path"="/admin/users/{id}"},
- *        "put"={"path"="/admin/users/{id}"},
+ *        "editUser":{
+ *              "route_name"="modification",
+ *              "path":"/admin/users/{id}",
+ *               "access_control"="(is_granted('ROLE_ADMIN') )",
+ *               "deserialize" = false
+ *              },
  *         "delete"={"path"="/admin/users/{id}"}
  *}
  * )

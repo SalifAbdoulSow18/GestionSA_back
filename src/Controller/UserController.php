@@ -66,17 +66,17 @@ class UserController extends AbstractController
 
     /**
      * @Route(
-     *     "/api/admin/users/{id}",
+     *     path="/api/admin/users/{id}",
      *     name="modification",
-     *     methods={"PUT"}
+     *     methods={"PUT"},
      *     )
      */
-    public function ModifyUser(UserService $userService, UserRepository $userRepository, Request $request,$id)
+    public function modifyUser(Request $request, $id, UserService $userService, UserRepository $userRepository)
     {
         $user = $userRepository->find($id);
         
         $data_user=$request->request->all();
-         dd($data_user);
+         return $this->json($data_user,400);
         foreach($data_user as $key => $value)
         {
             if($key!=='_method')
