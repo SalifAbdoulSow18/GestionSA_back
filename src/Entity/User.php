@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ApiResource(
  * normalizationContext={"groups"={"user:read"}},
  *    attributes={
- *        "security"="is_granted('ROLE_ADMIN') or is_granted('ROLE_CM')",
+ *        "security"="is_granted('ROLE_ADMIN') or is_granted('ROLE_CM') or object==user",
  *        "security_message"="Vous n'avez pas access à cette Ressource"
  * },
  *    collectionOperations={
