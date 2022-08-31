@@ -116,6 +116,9 @@
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
+    "gesdinet/jwt-refresh-token-bundle": {
+        "version": "v0.10.1"
+    },
     "laminas/laminas-code": {
         "version": "3.5.0"
     },
@@ -126,7 +129,7 @@
         "version": "1.1.1"
     },
     "lcobucci/jwt": {
-        "version": "3.3.3"
+        "version": "3.2.5"
     },
     "lexik/jwt-authentication-bundle": {
         "version": "2.5",
@@ -137,7 +140,7 @@
             "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
         },
         "files": [
-            "./config/packages/lexik_jwt_authentication.yaml"
+            "config/packages/lexik_jwt_authentication.yaml"
         ]
     },
     "namshi/jose": {

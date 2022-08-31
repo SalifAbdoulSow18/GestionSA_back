@@ -76,7 +76,7 @@ class UserController extends AbstractController
         $user = $userRepository->find($id);
         
         $data_user=$request->request->all();
-         return $this->json($data_user,400);
+         //return $this->json($data_user,400);
         foreach($data_user as $key => $value)
         {
             if($key!=='_method')
